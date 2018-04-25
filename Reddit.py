@@ -20,6 +20,9 @@ class Subreddit(object):
     def __str__(self):
         return 'Name: ' + self.name + '\n Ideology: ' + self.ideology + '\n Users: ' + str(self.users)
 
+    def __repr__(self):
+        return self.name
+
 class Post(object):
 
     def __init__(self):
