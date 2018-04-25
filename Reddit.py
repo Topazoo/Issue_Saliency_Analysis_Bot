@@ -10,12 +10,15 @@
 class Subreddit(object):
     """ Class to hold subreddit information """
 
-    def __init__(self):
-        self.name = None
-        self.ideology = None
+    def __init__(self, name, ideology):
+        self.name = name
+        self.ideology = ideology
         self.users = 0
         self.top_posts = []
         self.top_posters = []
+
+    def __str__(self):
+        return 'Name: ' + self.name + '\n Ideology: ' + self.ideology + '\n Users: ' + str(self.users)
 
 class Post(object):
 

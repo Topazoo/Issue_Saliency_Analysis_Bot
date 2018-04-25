@@ -13,7 +13,9 @@ from Bot import Bot
 def main():
     bot = Bot()
     bot.get_subreddits()
-    print bot.subreddits
+
+    for sub in bot.subreddits:
+        print(sub)
 
 if __name__ == '__main__':
     main()

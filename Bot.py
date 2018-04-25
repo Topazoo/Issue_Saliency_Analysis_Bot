@@ -6,9 +6,10 @@
     Description: A class to contain, organize, and analyze Reddit data
 
     Version: Python 2.7
-    Requirements: Spreadsheet.py and openpyxl """
+    Requirements: Spreadsheet.py, Reddit.py and openpyxl """
 
 from Spreadsheet import Spreadsheet
+from Reddit import Subreddit
 
 class Bot(object):
     """ Class to contain highest-order program operations """
@@ -31,7 +32,11 @@ class Bot(object):
         ideology_column = self.input_sheet.read_column(1)
 
         # Zip and store combined information
-        self.subreddits = zip(subreddits_column.values()[0], ideology_column.values()[0])
+        subreddits = zip(subreddits_column.values()[0], ideology_column.values()[0])
+
+        for subreddit in subreddits:
+            subreddit_obj = Subreddit(subreddit[0], subreddit[1])
+            self.subreddits.append(subreddit_obj)
 
 
 
