@@ -1,8 +1,8 @@
-#Subreddit Analysis Tool
-###Author: Peter Swanson
+# Subreddit Analysis Tool
+### Author: Peter Swanson
 
-##Background:
+## Background:
 
-##Functionality:
+## Functionality:
 
-##Requirements:
+## Requirements:
