@@ -20,3 +20,18 @@ class Bot(object):
 
         # Create a list of subreddits
         self.subreddits = []
+
+    def get_subreddits(self):
+        """ Get info from the spreadsheet """
+
+        # Get subreddit names
+        subreddits_column = self.input_sheet.read_column(0)
+
+        # Get subreddit ideologies
+        ideology_column = self.input_sheet.read_column(1)
+
+        # Zip and store combined information
+        self.subreddits = zip(subreddits_column.values()[0], ideology_column.values()[0])
+
+
+

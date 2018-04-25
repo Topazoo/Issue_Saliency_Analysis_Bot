@@ -47,3 +47,34 @@ class Spreadsheet(object):
 
         self.sheet[cell] = content
         self.save()
+
+    def read_column(self, col, header=True):
+        """ Read values from a column
+            Params:
+            @col - The column to read
+            @header - True if the column has a header """
+
+        # Column stored in a dict with a single list
+        values = []
+        column = {}
+
+        row = 1
+
+        # Header is dict key, values is a list of cell values from the column
+        if header:
+            column[self.sheet[row][col].value] = values
+            row += 1
+        else:
+            column["None"] = values
+
+        # Store values
+        while True:
+            cell = self.sheet[row][col].value
+
+            if cell is None:
+                break
+
+            values.append(cell)
+            row += 1
+
+        return column
