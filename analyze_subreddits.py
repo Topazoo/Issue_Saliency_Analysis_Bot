@@ -13,8 +13,13 @@ from Bot import Bot
 def main():
     bot = Bot()
     bot.get_subreddits()
+    bot.analyze_subreddits(10)
 
-    print(bot.subreddits)
+    for subreddit in bot.subreddits:
+        print(unicode(subreddit.name) + ' - ' + str(len(subreddit.top_posts)) + '\n---------------------------')
+        for post in subreddit.top_posts:
+            print unicode(post)
+        print "---------------------------"
 
 if __name__ == '__main__':
     main()

@@ -17,25 +17,19 @@ import os
 class TestSubreddit(TestCase):
     def test_empty(self):
         subreddit = Subreddit()
-        post = Post()
         user = User()
 
         self.assertEqual(str(subreddit), 'Empty_Subreddit')
         self.assertEqual(repr(subreddit), 'Subreddit_Object')
-        self.assertEqual(str(post), 'Empty_Post')
-        self.assertEqual(repr(post), 'Post_Object')
         self.assertEqual(str(user), 'Empty_User')
         self.assertEqual(repr(user), 'User_Object')
 
     def test_full(self):
         subreddit = Subreddit('r/politics', 'Center')
-        post = Post('Hello Reddit', 'Peter')
         user = User('Peter')
 
         self.assertEqual(str(subreddit), 'Name: r/politics\n Ideology: Center\n Users: 0')
         self.assertEqual(repr(subreddit), 'r/politics')
-        self.assertEqual(str(post), 'Title: Hello Reddit\n Poster: Peter')
-        self.assertEqual(repr(post), 'Hello Reddit')
         self.assertEqual(str(user), 'Name: Peter')
         self.assertEqual(repr(user), 'Peter')
 
@@ -62,3 +56,16 @@ class TestBot(TestCase):
         bot = Bot()
         bot.get_subreddits()
         self.assertEqual([str(repr(x)) for x in bot.subreddits], [u'r/socialism', u'r/Libertarian', u'r/The_Donald', u'r/politics'])
+
+    def test_analyze_subreddits(self):
+        bot = Bot()
+        bot.get_subreddits()
+        bot.analyze_subreddits(10)
+
+        flag = 0
+
+        for subreddit in bot.subreddits:
+            if len(subreddit.top_posts) < 8:
+                flag = 1
+
+        self.assertTrue(flag == 0)
