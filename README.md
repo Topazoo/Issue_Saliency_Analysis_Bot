@@ -56,7 +56,7 @@
     [r/socialism, r/Libertarian, r/The_Donald, r/politics]
     
    # Store a list of x top posts from a time range for each subreddit
-   >>> bot.analyze_subreddits(limit=10, range='year')
+   >>> bot.get_posts(limit=10, range='year')
    >>> print bot.subreddits[0].top_posts[0]
    Title: Yup
     Poster: TheRandomSnake
