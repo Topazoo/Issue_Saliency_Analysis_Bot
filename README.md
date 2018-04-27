@@ -74,3 +74,5 @@
 - Python 2.7 - https://www.python.org/downloads/release/python-2714/
 - openpyxl - https://pypi.org/project/openpyxl/
 - praw - https://pypi.org/project/praw/
+    - Reddit OAuth2 - https://github.com/reddit-archive/reddit/wiki/OAuth2
+    - A praw.ini file with your OAuth2 details - http://praw.readthedocs.io/en/latest/getting_started/configuration/prawini.html
