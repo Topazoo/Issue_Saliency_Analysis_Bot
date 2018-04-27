@@ -19,7 +19,7 @@ class Bot(object):
     def __init__(self):
         # Open spreadsheets for inputs and results
         self.input_sheet = Spreadsheet("input/subreddits.xlsx")
-        self.output_file = Spreadsheet("output/results.xlsx", False)
+        self.output_sheet = Spreadsheet("output/results.xlsx", False)
 
         self.reddit = praw.Reddit('193bot')
 
@@ -56,6 +56,24 @@ class Bot(object):
                 post_object = Post(post)
                 if post_object.title and post_object.poster:
                     subreddit.top_posts.append(post_object)
+
+    def create_output(self):
+        """ Create the output file """
+
+        # Create sheets
+        init_sheet = self.output_sheet.file['Sheet']
+        init_sheet.title = 'Subreddits'
+        self.output_sheet.create_sheets([repr(x)[2:] for x in self.subreddits])
+
+        # Create legends
+        self.output_sheet.write_column(1, [repr(x) for x in self.subreddits], start_row=2, italics=True)
+        self.output_sheet.write_row(1, [str(x) for x in self.subreddits[0].__dict__.keys() if x != "feed" and x != "top_posts"],
+                                       start_col=2, bold=True)
+        for sheet in self.output_sheet.file.worksheets:
+            if str(sheet.title) != "Subreddits":
+                self.output_sheet.sheet = sheet
+                self.output_sheet.write_row(1,[str(x).title() for x in self.subreddits[0].top_posts[0].__dict__.keys() if x != "post"],
+                                            start_col=1, bold=True)
 
     def get_users(self):
         # Most active now

@@ -28,7 +28,7 @@ class Subreddit(object):
 
     def __repr__(self):
         if self.name:
-            return self.name
+            return str(self.name)
         return 'Subreddit_Object'
 
 class Post(object):

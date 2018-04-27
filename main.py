@@ -15,7 +15,7 @@ def main():
     bot.get_subreddits()
     bot.get_posts(3)
     bot.get_users()
-    print bot.input_sheet.read_row(1)
+    bot.create_output()
 
     for subreddit in bot.subreddits:
         print(unicode(subreddit.name) + ' | Users: ' + str(subreddit.users) + ' | Posts: ' +

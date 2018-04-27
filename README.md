@@ -65,6 +65,9 @@
     Type: Image
     Date: 2017-10-09 17:42:47
     Link: /r/socialism/comments/75ar86/yup/
+    
+   # Create a spreadsheet with info about each subreddit, post and user
+   >>> bot.create_output() 
 ```        
 
 #### Testing.py

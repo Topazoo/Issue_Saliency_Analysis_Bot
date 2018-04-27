@@ -104,7 +104,7 @@ class Spreadsheet(object):
 
         return obj
 
-    def write_column(self, col, content, start_row=1):
+    def write_column(self, col, content, start_row=1, bold=False, italics=False):
         """ Write values to a column
             Params:
             @col - The column to read
@@ -116,12 +116,13 @@ class Spreadsheet(object):
 
         # Store values
         for value in content:
-            self.sheet.cell(row=row, column=col, value=value)
+            cell = self.sheet.cell(row=row, column=col, value=value)
+            cell.font = cell.font.copy(bold=bold, italic=italics)
             row += 1
 
         self.save()
 
-    def write_row(self, row, content, start_col=1):
+    def write_row(self, row, content, start_col=1, bold=False, italics=False):
         """ Write values to a row
             Params:
             @row - The row to write to
@@ -133,8 +134,14 @@ class Spreadsheet(object):
 
         # Store values
         for value in content:
-            self.sheet.cell(row=row, column=col, value=value)
+            cell = self.sheet.cell(row=row, column=col, value=value)
+            cell.font = cell.font.copy(bold=bold, italic=italics)
             col += 1
 
         self.save()
 
+    def create_sheets(self, values):
+        for value in values:
+            self.file.create_sheet(value)
+
+        self.save()
