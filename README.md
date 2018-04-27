@@ -16,11 +16,17 @@
     >>> sheet.write(content, cell) 
     
     # Read and store a column in a dict, header as dict key if header=true 
-    >>> column = sheet.read_column(col, header=True)
+    >>> column = sheet.read_column(col, header=True, start_row=1)
     
-    >>> print(column)
-    {'header': [row1, row2, row3...]}
+    # Read and store a row in a dict, row number as dict key 
+    >>> column = sheet.read_column(col, header=True, start_row=1)
     
+    # Write a list of content to a column, one item per cell
+    >>> column = sheet.write_column(col, content, start_row=1)
+    
+    # Write a list of content to a row, one item per cell
+    >>> row = sheet.write_row(row, content, start_col=1)
+        
     # Save the sheet
     >>> sheet.save()
 ```
