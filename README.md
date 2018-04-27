@@ -60,7 +60,11 @@
    >>> print bot.subreddits[0].top_posts[0]
    Title: Yup
     Poster: TheRandomSnake
-   
+    Score: 23893
+    Comments: 307
+    Type: Image
+    Date: 2017-10-09 17:42:47
+    Link: /r/socialism/comments/75ar86/yup/
 ```        
 
 #### Testing.py
