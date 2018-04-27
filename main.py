@@ -10,13 +10,7 @@
 
 from POL193_RedditBot.Bot import Bot
 
-def main():
-    bot = Bot()
-    bot.get_subreddits()
-    bot.get_posts(3)
-    bot.get_users()
-    bot.create_output()
-
+def print_subreddits(bot):
     for subreddit in bot.subreddits:
         print(unicode(subreddit.name) + ' | Users: ' + str(subreddit.users) + ' | Posts: ' +
               str(len(subreddit.top_posts)) + '\n---------------------------')
@@ -24,6 +18,12 @@ def main():
             print unicode(post)
             print('')
         print "---------------------------"
+
+def main():
+    bot = Bot()
+    bot.get_subreddits()
+    bot.get_posts(100)
+    bot.create_output()
 
 if __name__ == '__main__':
     main()

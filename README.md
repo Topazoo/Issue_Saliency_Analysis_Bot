@@ -1,13 +1,55 @@
 # Subreddit Analysis Tool
 ### Author: Peter Swanson
 
-## Background:
+## Background
 
-## Functionality:
+## Functionality
+### Set Up:
+- Create a <b>subreddits.xlsx</b> spreadsheet containing two columns the headers:
+    1. Subreddit - The name of the subreddit (e.g. r/all)
+    2. Ideology - The assumed ideology of the subreddit's users
+- Place the spreadsheet file in the <b>input</b> folder
+- Register for <b>OAuth2</b> and create a <b>praw.ini</b> file (see requirements)
+
+### Collecting Information:
+- Open <b>Python 2.7</b> from the folder containing the <b>input</b> folder and instantiate a <b>Bot</b> object
+``` 
+    >>> from POL193_RedditBot import Bot
+    
+    >>> bot = Bot() 
+```
+- Use the <b>Bot.get_subreddits()</b> and <b>Bot.get_posts()</b> methods to collect subreddit and post information respectively 
+``` 
+    >>> bot.get_subreddits()
+    
+    >>> bot.get_posts()
+```
+- This data is stored in the <b>Bot.subreddits</b> and <b>Bot.subreddits[index].top_posts</b> lists as Subreddit and Post
+ objects respectively. 
+ ``` 
+    >>> print(bot.subreddits)
+    [r/socialism, r/Libertarian, r/The_Donald, r/politics]
+    
+    >>> print bot.subreddits[0].top_posts[0]
+    Title: Yup
+     Poster: TheRandomSnake
+     Score: 23893
+     Comments: 307
+     Type: Image
+     Date: 2017-10-09 17:42:47
+     Link: /r/socialism/comments/75ar86/yup/
+```
+
+### Recording Information:
+- Information can be written to an Excel spreadsheet in <b>output/results.xlsx</b> using the <b>Bot.create_output()</b> method
+```
+    >>> bot.create_output()
+    Success! Data written to output/results.xlsx
+```
 
 ## Files
 #### Spreadsheet.py
-###### Simplifies reading and writing to excel files
+###### Simplifies reading and writing to Excel files
 ``` 
    # Instantiate object given a filename, loads file if load=true
     >>> sheet = Spreadsheet(filename, load=True)
@@ -68,6 +110,7 @@
     
    # Create a spreadsheet with info about each subreddit, post and user
    >>> bot.create_output() 
+   Success! Data written to output/results.xlsx
 ```        
 
 #### Testing.py

@@ -141,6 +141,7 @@ class Spreadsheet(object):
         self.save()
 
     def create_sheets(self, values):
+        """ Create sheets """
         for value in values:
             self.file.create_sheet(value)
 

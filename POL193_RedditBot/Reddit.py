@@ -37,7 +37,7 @@ class Post(object):
     def __init__(self, post):
         self.post = post
         self.poster = post.author
-        self.title = post.title
+        self.title = post.title.encode('ascii', 'ignore')
         self.comments = post.num_comments
         self.score = post.score
         self.up_votes = post.ups
@@ -49,7 +49,7 @@ class Post(object):
         self.text = None
 
         if post.selftext is not u'':
-            self.text = post.selftext
+            self.text = post.selftext.encode('ascii', 'ignore')
 
     def get_type(self, post):
         """ Checks if a post has attached media """
@@ -68,13 +68,12 @@ class Post(object):
 
     def __str__(self):
         if self.title and self.poster:
-            string = ('Title: ' + self.title.encode('ascii', 'ignore') + '\n Poster: ' +
-                    self.poster.name).encode('ascii', 'ignore') + '\n Score: ' + str(self.score) + \
-                    '\n Comments: ' + str(self.comments) + '\n Type: ' + self.type + \
-                    '\n Date: ' +  str(datetime.datetime.utcfromtimestamp(self.date)) + '\n Link: ' + self.link
+            string = 'Title: ' + self.title + '\n Poster: ' + self.poster.name.encode('ascii', 'ignore') + '\n Score: ' + \
+                     str(self.score) + '\n Comments: ' + str(self.comments) + '\n Type: ' + self.type + '\n Date: ' + \
+                     str(datetime.datetime.utcfromtimestamp(self.date)) + '\n Link: ' + self.link
 
-            if(self.text):
-                string += ('\n Text: ' + self.text.encode('ascii', 'ignore'))
+            if self.text:
+                string += ('\n Text: ' + self.text)
 
             return string
         else:
@@ -82,8 +81,9 @@ class Post(object):
 
     def __repr__(self):
         if self.title:
-            return self.title.encode('ascii', 'ignore')
+            return self.title
         return 'Post_Object'
+
 
 class User(object):
     """ Class to hold user information """
