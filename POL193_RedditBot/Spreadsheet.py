@@ -48,7 +48,7 @@ class Spreadsheet(object):
         self.sheet[cell] = content
         self.save()
 
-    def read_column(self, col, header=True):
+    def read_column(self, col, header=True, start_row=1):
         """ Read values from a column
             Params:
             @col - The column to read
@@ -58,18 +58,18 @@ class Spreadsheet(object):
         values = []
         column = {}
 
-        row = 1
+        row = start_row
 
         # Header is dict key, values is a list of cell values from the column
         if header:
-            column[self.sheet[row][col].value] = values
+            column[self.sheet[row][col - 1].value] = values
             row += 1
         else:
             column["None"] = values
 
         # Store values
         while True:
-            cell = self.sheet[row][col].value
+            cell = self.sheet.cell(row=row, column=col).value
 
             if cell is None:
                 break
@@ -78,3 +78,63 @@ class Spreadsheet(object):
             row += 1
 
         return column
+
+    def read_row(self, row, start_col=1):
+        """ Read values from a row
+            Params:
+            @row - The row to read
+            @start_col - The column to read past"""
+
+        # Row stored in a dict with a single list
+        values = []
+        obj = {}
+        obj['Row: ' + str(row)] = values
+
+        col = start_col
+
+        # Store values
+        while True:
+            cell = self.sheet.cell(row=row, column=col).value
+
+            if cell is None:
+                break
+
+            values.append(cell)
+            col += 1
+
+        return obj
+
+    def write_column(self, col, content, start_row=1):
+        """ Write values to a column
+            Params:
+            @col - The column to read
+            @start_row - The row to start writing at
+            @content - a list of values to write """
+
+        # Column stored in a dict with a single list
+        row = start_row
+
+        # Store values
+        for value in content:
+            self.sheet.cell(row=row, column=col, value=value)
+            row += 1
+
+        self.save()
+
+    def write_row(self, row, content, start_col=1):
+        """ Write values to a row
+            Params:
+            @row - The row to write to
+            @start_col - The column to start writing at
+            @content - a list of values to write """
+
+        # Column stored in a dict with a single list
+        col = start_col
+
+        # Store values
+        for value in content:
+            self.sheet.cell(row=row, column=col, value=value)
+            col += 1
+
+        self.save()
+

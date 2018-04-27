@@ -61,6 +61,6 @@
 ###### Unit testing for all classes
 
 ## Requirements:
-- Python 2.7
-- openpyxl
-- praw
+- Python 2.7 - https://www.python.org/downloads/release/python-2714/
+- openpyxl - https://pypi.org/project/openpyxl/
+- praw - https://pypi.org/project/praw/

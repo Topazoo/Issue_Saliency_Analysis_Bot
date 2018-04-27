@@ -1,3 +1,6 @@
 *.ini
 *.pyc
 results.xlsx
+/Testing
+__init__.py
+.gitignore

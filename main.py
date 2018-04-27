@@ -8,17 +8,21 @@
     Version: Python 2.7
     Requirements: Bot.py, Spreadsheet.py, Reddit.py and openpyxl """
 
-from Bot import Bot
+from POL193_RedditBot.Bot import Bot
 
 def main():
     bot = Bot()
     bot.get_subreddits()
-    bot.analyze_subreddits(10)
+    bot.get_posts(3)
+    bot.get_users()
+    print bot.input_sheet.read_row(1)
 
     for subreddit in bot.subreddits:
-        print(unicode(subreddit.name) + ' - ' + str(len(subreddit.top_posts)) + '\n---------------------------')
+        print(unicode(subreddit.name) + ' | Users: ' + str(subreddit.users) + ' | Posts: ' +
+              str(len(subreddit.top_posts)) + '\n---------------------------')
         for post in subreddit.top_posts:
             print unicode(post)
+            print('')
         print "---------------------------"
 
 if __name__ == '__main__':
