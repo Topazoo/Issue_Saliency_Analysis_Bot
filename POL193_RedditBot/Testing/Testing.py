@@ -9,11 +9,9 @@
 
 import os
 from unittest import TestCase
-
 from Code.POL193_RedditBot.Bot import Bot
 from Code.POL193_RedditBot.Reddit import Subreddit, User
 from Code.POL193_RedditBot.Spreadsheet import Spreadsheet
-
 
 # Test Reddit Classes
 class TestSubreddit(TestCase):
@@ -22,9 +20,9 @@ class TestSubreddit(TestCase):
         user = User()
 
         self.assertEqual(str(subreddit), 'Empty_Subreddit')
-        self.assertEqual(repr(subreddit), 'Subreddit_Object')
+        self.assertEqual(repr(subreddit), '<Empty_Subreddit_Object>')
         self.assertEqual(str(user), 'Empty_User')
-        self.assertEqual(repr(user), 'User_Object')
+        self.assertEqual(repr(user), '<Empty_User_Object>')
 
     def test_full(self):
         subreddit = Subreddit('r/politics', 'Center')

@@ -111,7 +111,7 @@
     # Store a list of the top x users for each subreddit
     >>> bot.get_users(user_count=10)
     >>> print bot.subreddits[0].top_posters[0]
-    'YElluminaty'
+    'Name: YElluminaty'
     
    # Create a spreadsheet with info about each subreddit, post and user
    >>> bot.create_output() 

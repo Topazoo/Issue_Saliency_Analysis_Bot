@@ -10,7 +10,7 @@
 
 import praw
 from collections import Counter
-from Reddit import Subreddit, Post
+from Reddit import Subreddit, Post, User
 from Spreadsheet import Spreadsheet
 
 class Bot(object):
@@ -57,7 +57,7 @@ class Bot(object):
                 if post_object.title and post_object.poster:
                     subreddit.top_posts.append(post_object)
 
-    def create_output(self, subreddits=True, posts=True):
+    def create_output(self):
         """ Create the output file """
 
         # Create sheets
@@ -104,19 +104,24 @@ class Bot(object):
                 sub_num += 1
 
     def get_users(self, user_count=10):
-        """ Get the top users for each subreddit"""
+        """ Get the top users for each subreddit
+            @Params:
+            user_count - The number of users to record """
 
         for subreddit in self.subreddits:
             users = {}
 
             # Record posters of last 3000 comments
             for comment in subreddit.feed.comments(limit=5000):
-                if comment.author.name not in users.keys():
-                    users[comment.author.name] = 1
-                else:
-                    users[comment.author.name] += 1
+                if comment.author:
+                    if comment.author.name not in users.keys():
+                        users[comment.author.name] = 1
+                    else:
+                        users[comment.author.name] += 1
 
             counter = Counter(users)
 
-            # Store top posters in top_posters
-            subreddit.top_posters = [x[0].encode('ascii', 'ignore') for x in counter.most_common(user_count)]
+            for user in counter.most_common(user_count):
+                new_user = User(user[0])
+                new_user.profile = self.reddit.redditor(user[0])
+                subreddit.top_posters.append(new_user)

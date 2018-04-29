@@ -23,13 +23,12 @@ class Subreddit(object):
     def __str__(self):
         if self.name and self.ideology:
             return 'Name: ' + self.name + '\n Ideology: ' + self.ideology + '\n Users: ' + str(self.users)
-        else:
-            return 'Empty_Subreddit'
+        return 'Empty_Subreddit'
 
     def __repr__(self):
         if self.name:
             return str(self.name)
-        return 'Subreddit_Object'
+        return '<Empty_Subreddit_Object>'
 
 class Post(object):
     """ Class to hold post information """
@@ -76,19 +75,20 @@ class Post(object):
                 string += ('\n Text: ' + self.text)
 
             return string
-        else:
-            return 'Empty_Post'
+
+        return 'Empty_Post'
 
     def __repr__(self):
         if self.title:
-            return self.title
-        return 'Post_Object'
+            return self.title.encode('ascii', 'ignore')
+        return '<Empty_Post_Object>'
 
 class User(object):
     """ Class to hold user information """
 
     def __init__(self, name=None):
         self.name = name
+        self.profile = None
         self.posts = 0
         self.karma = 0
         self.age = 0
@@ -99,10 +99,9 @@ class User(object):
     def __str__(self):
         if self.name:
             return 'Name: ' + self.name
-        else:
-            return "Empty_User"
+        return "Empty_User"
 
     def __repr__(self):
         if self.name:
-            return self.name
-        return 'User_Object'
+            return str(self.name)
+        return '<Empty_User_Object>'
