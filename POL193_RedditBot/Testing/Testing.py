@@ -10,9 +10,9 @@
 import os
 from unittest import TestCase
 
-from POL193_RedditBot.Bot import Bot
-from POL193_RedditBot.Reddit import Subreddit, User
-from POL193_RedditBot.Spreadsheet import Spreadsheet
+from Code.POL193_RedditBot.Bot import Bot
+from Code.POL193_RedditBot.Reddit import Subreddit, User
+from Code.POL193_RedditBot.Spreadsheet import Spreadsheet
 
 
 # Test Reddit Classes

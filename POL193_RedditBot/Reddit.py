@@ -84,7 +84,6 @@ class Post(object):
             return self.title
         return 'Post_Object'
 
-
 class User(object):
     """ Class to hold user information """
 

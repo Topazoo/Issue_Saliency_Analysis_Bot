@@ -23,6 +23,7 @@ def main():
     bot = Bot()
     bot.get_subreddits()
     bot.get_posts(100)
+    bot.get_users()
     bot.create_output()
 
 if __name__ == '__main__':

@@ -9,7 +9,7 @@
     Requirements: Spreadsheet.py, Reddit.py and openpyxl """
 
 import praw
-
+from collections import Counter
 from Reddit import Subreddit, Post
 from Spreadsheet import Spreadsheet
 
@@ -57,7 +57,7 @@ class Bot(object):
                 if post_object.title and post_object.poster:
                     subreddit.top_posts.append(post_object)
 
-    def create_output(self):
+    def create_output(self, subreddits=True, posts=True):
         """ Create the output file """
 
         # Create sheets
@@ -103,9 +103,20 @@ class Bot(object):
 
                 sub_num += 1
 
-    def get_users(self):
-        # Most active now
-        ## Last 100 posts and the users posting in the comments
-        # Most active a year ago
-        # Moderators
-        test = "test"
+    def get_users(self, user_count=10):
+        """ Get the top users for each subreddit"""
+
+        for subreddit in self.subreddits:
+            users = {}
+
+            # Record posters of last 3000 comments
+            for comment in subreddit.feed.comments(limit=5000):
+                if comment.author.name not in users.keys():
+                    users[comment.author.name] = 1
+                else:
+                    users[comment.author.name] += 1
+
+            counter = Counter(users)
+
+            # Store top posters in top_posters
+            subreddit.top_posters = [x[0].encode('ascii', 'ignore') for x in counter.most_common(user_count)]
