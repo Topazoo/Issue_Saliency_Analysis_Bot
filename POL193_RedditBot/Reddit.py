@@ -89,12 +89,23 @@ class User(object):
     def __init__(self, name=None):
         self.name = name
         self.profile = None
-        self.posts = 0
-        self.karma = 0
-        self.age = 0
 
-        self.subreddits = []
-        self.post_urls = []
+        self.sub_comments = []
+
+    def get_comments(self, subreddit, num_comments=10):
+        """ Collects recent posts by a user in a given subreddit
+            @subreddit - The subreddit to get comments from
+            @num_comments - The number of comments to record """
+
+        comment_num = 0
+        for comment in self.profile.comments.new(limit=num_comments):
+            if comment_num == num_comments:
+                break
+            if str(comment.subreddit.display_name) == str(subreddit.name[2:]):
+                # Create and store comment object
+                com = Comment(comment)
+                self.sub_comments.append(com)
+                comment_num += 1
 
     def __str__(self):
         if self.name:
@@ -104,4 +115,23 @@ class User(object):
     def __repr__(self):
         if self.name:
             return str(self.name)
+        return '<Empty_User_Object>'
+
+
+class Comment(object):
+    """ Class to hold comment information """
+
+    def __init__(self, comment):
+        self.author = comment.author
+        self.text = comment.body
+        self.post = comment.submission
+
+    def __str__(self):
+        if self.author and self.text:
+            return self.text.encode('ascii', 'ignore')
+        return ""
+
+    def __repr__(self):
+        if self.author:
+            return '<Comment: Author=' + self.author.encode('ascii', 'ignore') +'>'
         return '<Empty_User_Object>'

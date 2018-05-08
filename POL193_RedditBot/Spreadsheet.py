@@ -116,7 +116,8 @@ class Spreadsheet(object):
 
         # Store values
         for value in content:
-            cell = self.sheet.cell(row=row, column=col, value=value)
+            cell = self.sheet.cell(row=row, column=col, value=value.encode('unicode_escape').decode('utf-8'))
+
             cell.font = cell.font.copy(bold=bold, italic=italics)
             row += 1
 
@@ -134,7 +135,7 @@ class Spreadsheet(object):
 
         # Store values
         for value in content:
-            cell = self.sheet.cell(row=row, column=col, value=value)
+            cell = self.sheet.cell(row=row, column=col, value=value.encode('unicode_escape').decode('utf-8'))
             cell.font = cell.font.copy(bold=bold, italic=italics)
             col += 1
 

@@ -14,14 +14,16 @@ from Reddit import Subreddit, Post, User
 from Spreadsheet import Spreadsheet
 
 class Bot(object):
-    """ Class to contain highest-order program operations """
+    """ Class to contain highest-order program operations
+        @bot_name - The name of the Praw bot """
 
-    def __init__(self):
+    def __init__(self, bot_name='193bot'):
         # Open spreadsheets for inputs and results
         self.input_sheet = Spreadsheet("input/subreddits.xlsx")
-        self.output_sheet = Spreadsheet("output/results.xlsx", False)
+        self.subreddit_output_sheet = Spreadsheet("output/subreddit_results.xlsx", False)
+        self.user_output_sheet = Spreadsheet("output/user_results.xlsx", False)
 
-        self.reddit = praw.Reddit('193bot')
+        self.reddit = praw.Reddit(bot_name)
 
         # Create a list of subreddits
         self.subreddits = []
@@ -46,9 +48,8 @@ class Bot(object):
 
     def get_posts(self, limit=30, range='year'):
         """ Get a number (limit) of top posts ranging back a range.
-            @Params:
-             limit - number of posts to collect
-             range - range of time to get posts from """
+             @limit - number of posts to collect
+             @range - range of time to get posts from """
 
         # For all subreddits, collect valid posts
         for subreddit in self.subreddits:
@@ -57,31 +58,43 @@ class Bot(object):
                 if post_object.title and post_object.poster:
                     subreddit.top_posts.append(post_object)
 
-    def create_output(self):
-        """ Create the output file """
+    def create_subreddit_output(self):
+        """ Create the subreddit output file """
 
         # Create sheets
-        init_sheet = self.output_sheet.file['Sheet']
+        init_sheet = self.subreddit_output_sheet.file['Sheet']
         init_sheet.title = 'Subreddits'
-        self.output_sheet.create_sheets([repr(x)[2:] for x in self.subreddits])
+        self.subreddit_output_sheet.create_sheets([repr(x)[2:] for x in self.subreddits])
 
         self.write_subreddits()
         self.write_posts()
 
-        print "Success! Data written to: output/results.xlsx"
+        print("Success! Data written to: output/subreddit_results.xlsx")
+
+    def create_user_output(self):
+        """ Create the output sheet for user information """
+
+        init_sheet = self.user_output_sheet.file['Sheet']
+        init_sheet.title = 'Users'
+        self.user_output_sheet.create_sheets([repr(x)[2:] for x in self.subreddits])
+
+        self.write_user_info()
+        self.write_users()
+
+        print("Success! Data written to: output/user_results.xlsx")
 
     def write_subreddits(self):
         """ Write subreddit info to subreddit sheet """
 
         # Dynamically create legend based on current attributes of the Subreddit class
-        self.output_sheet.write_row(1, [str(x).title() for x in self.subreddits[0].__dict__.keys() if x != "feed" and x != "top_posts"],
-                                       start_col=1, bold=True)
+        self.subreddit_output_sheet.write_row(1, [str(x).title() for x in self.subreddits[0].__dict__.keys()
+                                                  if x != "feed" and x != "top_posts"], start_col=1, bold=True)
 
         # Dynamically write info for subreddits based on the current attributes of the Subreddit class
         sub_num = 2
         for subreddit in self.subreddits:
-            self.output_sheet.write_row(sub_num, [str(x[1]) for x in subreddit.__dict__.items() if x[0] != "feed" and x[0] != "top_posts"],
-                                        start_col=1)
+            self.subreddit_output_sheet.write_row(sub_num, [str(x[1]) for x in subreddit.__dict__.items()
+                                                            if x[0] != "feed" and x[0] != "top_posts"], start_col=1)
             sub_num += 1
 
     def write_posts(self):
@@ -89,29 +102,67 @@ class Bot(object):
 
         # Loop through each sheet and write a dynamic legend based on the current attributes of the Post class
         sub_num = 0
-        for sheet in self.output_sheet.file.worksheets:
+        for sheet in self.subreddit_output_sheet.file.worksheets:
             if str(sheet.title) != "Subreddits":
-                self.output_sheet.sheet = sheet
-                self.output_sheet.write_row(1,[str(x).title() for x in self.subreddits[0].top_posts[0].__dict__.keys() if x != "post"],
+                self.subreddit_output_sheet.sheet = sheet
+                self.subreddit_output_sheet.write_row(1,[str(x).title() for x in self.subreddits[0].top_posts[0].__dict__.keys() if x != "post"],
                                             start_col=1, bold=True)
 
                 # Dynamically write all current values of the Post class (write all relevent post data for all posts)
                 row_num = 2
                 for post in self.subreddits[sub_num].top_posts:
-                    self.output_sheet.write_row(row_num, [str(x[1]) for x in post.__dict__.items() if x[0] != "post"], start_col=1)
+                    self.subreddit_output_sheet.write_row(row_num, [str(x[1]) for x in post.__dict__.items() if x[0] != "post"], start_col=1)
                     row_num += 1
 
                 sub_num += 1
 
-    def get_users(self, user_count=10):
+    def write_users(self):
+        """ Write comments for each user """
+
+        sub_num = 0
+        for sheet in self.user_output_sheet.file.worksheets:
+            if str(sheet.title) != "Users":
+                self.user_output_sheet.sheet = sheet
+                # Write all usernames
+                self.user_output_sheet.write_row(1, [user.name for user in self.subreddits[sub_num].top_posters], bold=True)
+                # Write all posts
+                user_num = 1
+                for user in self.subreddits[sub_num].top_posters:
+                    self.user_output_sheet.write_column(user_num, [comment.text.encode('ascii', 'ignore') for comment in user.sub_comments],
+                                                        start_row=2)
+                    user_num += 1
+
+                sub_num += 1
+
+    def write_user_info(self):
+        """ Write info collected about users """
+
+        # Get and label sheet
+        self.user_output_sheet.sheet = self.user_output_sheet.file.worksheets[0]
+        self.user_output_sheet.write_row(1,["User", "Karma", "Subreddit", "Comments"], bold=True)
+
+        row = 2
+        for subreddit in self.subreddits:
+            # Write names
+            self.user_output_sheet.write_column(1, [str(poster.name) for poster in subreddit.top_posters], start_row=row)
+            # Write karma
+            self.user_output_sheet.write_column(2, [str(poster.profile.comment_karma) for poster in subreddit.top_posters], start_row=row)
+            # Write subreddits
+            self.user_output_sheet.write_column(3, [str(subreddit.name)] * len(subreddit.top_posters), start_row=row)
+            # Write comment count
+            self.user_output_sheet.write_column(4, [str(len(poster.sub_comments)) for poster in subreddit.top_posters], start_row=row)
+
+            row += len(subreddit.top_posters)
+
+    def get_users(self, user_count=10, comment_count=10):
         """ Get the top users for each subreddit
-            @Params:
-            user_count - The number of users to record """
+            @user_count - The number of users to record
+            @comment_count - The number of recent comments in a subreddit to record """
 
         for subreddit in self.subreddits:
             users = {}
 
-            # Record posters of last 3000 comments
+            # Record posters of last 5000 comments
             for comment in subreddit.feed.comments(limit=5000):
                 if comment.author:
                     if comment.author.name not in users.keys():
@@ -120,8 +171,11 @@ class Bot(object):
                         users[comment.author.name] += 1
 
             counter = Counter(users)
-
+            # Get users that comment most frequently
             for user in counter.most_common(user_count):
+                # Store as a user object
                 new_user = User(user[0])
                 new_user.profile = self.reddit.redditor(user[0])
+                # Store most recent comments
+                new_user.get_comments(subreddit, comment_count)
                 subreddit.top_posters.append(new_user)

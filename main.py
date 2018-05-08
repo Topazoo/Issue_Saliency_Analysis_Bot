@@ -20,11 +20,12 @@ def print_subreddits(bot):
         print "---------------------------"
 
 def main():
-    bot = Bot()
+    bot = Bot('193bot')
     bot.get_subreddits()
-    bot.get_posts(100)
-    bot.get_users()
-    bot.create_output()
+    bot.get_posts(20)
+    bot.get_users(user_count=100, comment_count=100)
+    bot.create_subreddit_output()
+    bot.create_user_output()
 
 if __name__ == '__main__':
     main()

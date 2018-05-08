@@ -2,6 +2,20 @@
 ### Author: Peter Swanson
 
 ## Background
+Every subreddit on Reddit can be viewed as its own  online community. Each has its own rules, moderators and regular posters.
+As a result, users in each employ different methods of communication to articulate a diverse array 
+of political views. 
+
+<b>This script is designed help research if/how communication styles vary
+across political subreddits.</b>
+
+This program collects information about subreddits listed in an Excel
+spreadsheet, as well as information about the users of those subreddits.
+This information is then written to two spreadsheets for easy viewing.
+
+Note: Spreadsheet.py is a particularly useful tool
+for writing lists of data to spreadsheet rows or columns on its own.
+
 
 ## Functionality
 ### Set Up:
@@ -12,11 +26,13 @@
 - Register for <b>OAuth2</b> and create a <b>praw.ini</b> file (see requirements)
 
 ### Collecting Information:
-- Open <b>Python 2.7</b> from the folder containing the <b>input</b> folder and instantiate a <b>Bot</b> object
+- Open <b>Python 2.7</b> from the folder containing the <b>input</b> folder and instantiate a <b>Bot</b> object using 
+the name you gave your bot when setting up PRAW
 ``` 
     >>> from POL193_RedditBot import Bot
     
-    >>> bot = Bot() 
+    # bot_name - A string containing the bot's name
+    >>> bot = Bot(bot_name='193bot') 
 ```
 - Use the <b>Bot.get_subreddits()</b> and <b>Bot.get_posts()</b> methods to collect subreddit and post information respectively 
 ``` 
@@ -41,11 +57,17 @@
 ```
 
 ### Recording Information:
-- Information can be written to an Excel spreadsheet in <b>output/results.xlsx</b> using the <b>Bot.create_output()</b> method
+- Information can be written to an Excel spreadsheets in <b>output/subreddit_results.xlsx</b> and <b>output/user_results.xlsx</b> using the respective methods
 ```
-    >>> bot.create_output()
-    Success! Data written to output/results.xlsx
+    >>> bot.create_subreddit_output()
+    Success! Data written to output/subreddit_results.xlsx
+    >>> bot.create_user_output()
+    Success! Data written to output/user_results.xlsx
 ```
+- The first spreadsheet contains information about the top posts and posters in each subreddit.
+- The second spreadsheet contains information about the top posters in each subreddit and their most recent comments.
+
+
 
 ## Files
 #### Spreadsheet.py
@@ -76,14 +98,17 @@
 #### Reddit.py
 ###### Contains classes representing Reddit objects
 ``` 
-   # Instantiate Subreddit object given an optional name and ideology
+   # Instantiate a Subreddit object given an optional name and ideology
     >>> subreddit = Subreddit(name=None, ideology=None)
     
-   # Instantiate Post object given a post
+   # Instantiate a Post object given a post
     >>> post = Post(post)
     
-   # Instantiate User object given an optional namme
+   # Instantiate a User object given an optional namme
     >>> user = User(name=None)
+    
+   # Instantiate a Comment object given a PRAW Comment
+   >>> comment = Comment(comment=PRAW.Comment)
 ```        
 
 #### Bot.py
@@ -108,14 +133,20 @@
     Date: 2017-10-09 17:42:47
     Link: /r/socialism/comments/75ar86/yup/
     
-    # Store a list of the top x users for each subreddit
-    >>> bot.get_users(user_count=10)
+    # Store a list of the top x users and y most recent comments for each subreddit
+    >>> bot.get_users(user_count=10, comment_count=10)
     >>> print bot.subreddits[0].top_posters[0]
     'Name: YElluminaty'
+    >>> print bot.subreddits[0].top_posters[0].sub_comments[0]
+    'Lol'
     
    # Create a spreadsheet with info about each subreddit, post and user
-   >>> bot.create_output() 
-   Success! Data written to output/results.xlsx
+   >>> bot.create_subreddit_output() 
+   Success! Data written to output/subreddit_results.xlsx
+   
+   # Create a spreadsheet with info about each user and their most recent posts
+   >>> bot.create_user_output()
+   Success! Data written to output/user_results.xlsx 
 ```        
 
 #### Testing.py
@@ -124,6 +155,12 @@
 ## Requirements:
 - Python 2.7 - https://www.python.org/downloads/release/python-2714/
 - openpyxl - https://pypi.org/project/openpyxl/
-- praw - https://pypi.org/project/praw/
+- PRAW - https://pypi.org/project/praw/
     - Reddit OAuth2 - https://github.com/reddit-archive/reddit/wiki/OAuth2
     - A praw.ini file with your OAuth2 details - http://praw.readthedocs.io/en/latest/getting_started/configuration/prawini.html
+    
+## TODO:
+- Most used words: https://pypi.org/project/redditanalysis/1.0.5/
+- Word clouds: https://github.com/paul-nechifor/reddit-cloud
+- Extract text from images: https://github.com/PiJoules/Text-from-Memes
+- Phrase analysis: http://textblob.readthedocs.io/en/dev/

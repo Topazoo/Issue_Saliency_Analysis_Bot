@@ -69,12 +69,12 @@ class TestSpreadsheet(TestCase):
 # Test Bot Class
 class TestBot(TestCase):
     def test_read_input(self):
-        bot = Bot()
+        bot = Bot('193bot')
         bot.get_subreddits()
         self.assertEqual([str(repr(x)) for x in bot.subreddits], [u'r/socialism', u'r/Libertarian', u'r/The_Donald', u'r/politics'])
 
     def test_get_posts(self):
-        bot = Bot()
+        bot = Bot('193bot')
         bot.get_subreddits()
         bot.get_posts(10)
 
