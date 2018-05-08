@@ -19,6 +19,10 @@ class Subreddit(object):
         self.users = 0
         self.top_posts = []
         self.top_posters = []
+        self.average_subjectivity = 0
+        self.overall_subjectivity = None
+        self.average_polarity = 0
+        self.overall_polarity = None
 
     def __str__(self):
         if self.name and self.ideology:
@@ -89,6 +93,10 @@ class User(object):
     def __init__(self, name=None):
         self.name = name
         self.profile = None
+        self.average_subjectivity = 0
+        self.overall_subjectivity = None
+        self.average_polarity = 0
+        self.overall_polarity = None
 
         self.sub_comments = []
 
@@ -125,6 +133,8 @@ class Comment(object):
         self.author = comment.author
         self.text = comment.body
         self.post = comment.submission
+        self.polarity = None
+        self.subjectivity = None
 
     def __str__(self):
         if self.author and self.text:

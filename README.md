@@ -4,6 +4,7 @@
 [![Python 2.7](https://img.shields.io/badge/Python-2.7-brightgreen.svg)](https://www.python.org/downloads/release/python-2714/)
 [![openpyxl](https://img.shields.io/badge/openpyxl-2.5.3-brightgreen.svg)](https://pypi.org/project/openpyxl/)
 [![praw](https://img.shields.io/badge/praw-5.4.0-brightgreen.svg)](https://pypi.org/project/praw/)
+[![textblob](https://img.shields.io/badge/textblob-0.15.1-brightgreen.svg)](https://pypi.org/project/textblob/)
 
 
 ## Background
@@ -134,7 +135,7 @@ the name you gave your bot when setting up PRAW
 ```        
 
 #### Bot.py
-###### Contains a class to analyze subreddits and their users
+###### Contains a class to record subreddits and their users
 ``` 
    # Instantiate Bot object reading inputs from subreddits.xlsx
     >>> bot = Bot()
@@ -171,6 +172,19 @@ the name you gave your bot when setting up PRAW
    Success! Data written to output/user_results.xlsx 
 ```        
 
+#### Analyzer.py
+###### Contains a class to analyze subreddit and user info
+``` 
+   # Instantiate am Analyzer object with a list of Subreddits populated with user and post information
+    >>> analyzer = Analyzer(subreddits=[Reddit.Subreddit])
+    
+   # Analyze polarity and subjectivity for all subreddits and user comments. 
+    >>> analyzer.analyze_all_text()
+    >>> print(analyzer.subreddits[0].average_polarity
+    .077501112
+   
+```    
+
 #### Testing.py
 ###### Unit testing for all classes
 
@@ -180,9 +194,8 @@ the name you gave your bot when setting up PRAW
 - PRAW - https://pypi.org/project/praw/
     - Reddit OAuth2 - https://github.com/reddit-archive/reddit/wiki/OAuth2
     - A praw.ini file with your OAuth2 details - http://praw.readthedocs.io/en/latest/getting_started/configuration/prawini.html
-    
+- textblob - http://textblob.readthedocs.io/en/dev/
 ## TODO:
 - Most used words: https://pypi.org/project/redditanalysis/1.0.5/
 - Word clouds: https://github.com/paul-nechifor/reddit-cloud
 - Extract text from images: https://github.com/PiJoules/Text-from-Memes
-- Phrase analysis: http://textblob.readthedocs.io/en/dev/

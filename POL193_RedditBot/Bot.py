@@ -91,13 +91,14 @@ class Bot(object):
         """ Write subreddit info to subreddit sheet """
 
         # Dynamically create legend based on current attributes of the Subreddit class
-        self.subreddit_output_sheet.write_row(1, [str(x).title() for x in self.subreddits[0].__dict__.keys()
+        self.subreddit_output_sheet.write_row(1, [str(x).title() for x in sorted(self.subreddits[0].__dict__.keys(), reverse=True)
                                                   if x != "feed" and x != "top_posts"], start_col=1, bold=True)
 
         # Dynamically write info for subreddits based on the current attributes of the Subreddit class
         sub_num = 2
         for subreddit in self.subreddits:
-            self.subreddit_output_sheet.write_row(sub_num, [str(x[1]) for x in subreddit.__dict__.items()
+            self.subreddit_output_sheet.write_row(sub_num, [str(x[1]) for x in sorted(subreddit.__dict__.items(),
+                                                                                      key=lambda att: att[0], reverse=True)
                                                             if x[0] != "feed" and x[0] != "top_posts"], start_col=1)
             sub_num += 1
 
@@ -127,14 +128,24 @@ class Bot(object):
         for sheet in self.user_output_sheet.file.worksheets:
             if str(sheet.title) != "Users":
                 self.user_output_sheet.sheet = sheet
-                # Write all usernames
-                self.user_output_sheet.write_row(1, [user.name for user in self.subreddits[sub_num].top_posters], bold=True)
+
                 # Write all posts
                 user_num = 1
                 for user in self.subreddits[sub_num].top_posters:
+                    # Write all usernames
+                    self.user_output_sheet.write_row(1, [user.name], user_num, bold=True)
+                    # Write subheadings
+                    self.user_output_sheet.write_row(2, ["Post", "Polarity", "Subjectivity"], user_num, italics=True)
+                    # Write comments
                     self.user_output_sheet.write_column(user_num, [comment.text.encode('ascii', 'ignore') for comment in user.sub_comments],
-                                                        start_row=2)
-                    user_num += 1
+                                                        start_row=3)
+                    # Write polarity
+                    self.user_output_sheet.write_column(user_num + 1, [str(comment.polarity) for comment in
+                                                                   user.sub_comments], start_row=3)
+                    # Write subjectivity
+                    self.user_output_sheet.write_column(user_num + 2, [str(comment.subjectivity) for comment in
+                                                                       user.sub_comments], start_row=3)
+                    user_num += 3
 
                 sub_num += 1
 
@@ -143,7 +154,7 @@ class Bot(object):
 
         # Get and label sheet
         self.user_output_sheet.sheet = self.user_output_sheet.file.worksheets[0]
-        self.user_output_sheet.write_row(1,["User", "Karma", "Subreddit", "Comments"], bold=True)
+        self.user_output_sheet.write_row(1,["User", "Karma", "Subreddit", "Comments", "Average Polarity", "Average Subjectivity"], bold=True)
 
         row = 2
         for subreddit in self.subreddits:
@@ -155,6 +166,10 @@ class Bot(object):
             self.user_output_sheet.write_column(3, [str(subreddit.name)] * len(subreddit.top_posters), start_row=row)
             # Write comment count
             self.user_output_sheet.write_column(4, [str(len(poster.sub_comments)) for poster in subreddit.top_posters], start_row=row)
+            # Write average polarity
+            self.user_output_sheet.write_column(5, [str(poster.average_polarity) for poster in subreddit.top_posters], start_row=row)
+            # Write average subjectivity
+            self.user_output_sheet.write_column(6, [str(poster.average_subjectivity) for poster in subreddit.top_posters], start_row=row)
 
             row += len(subreddit.top_posters)
 
@@ -183,7 +198,6 @@ class Bot(object):
                 # Store most recent comments
                 new_user.get_comments(subreddit, comment_count)
                 subreddit.top_posters.append(new_user)
-
 
     def analyze(self):
         self.analyzer.analyze_all_text()

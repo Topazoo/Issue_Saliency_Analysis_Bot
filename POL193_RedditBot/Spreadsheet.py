@@ -15,8 +15,7 @@ class Spreadsheet(object):
     """ Class to simplify operating on Excel sheets """
 
     def __init__(self, filename, load=True):
-        """ Params:
-            @filename - The name of the excel file including the extension
+        """ @filename - The name of the excel file including the extension
             @load - Load the file if true, create it if false """
 
         self.filename = filename
@@ -41,7 +40,6 @@ class Spreadsheet(object):
 
     def write(self, content, cell):
         """ Write to a cell
-            Params:
             @content - The content to write
             @cell - The cell to write to """
 
@@ -50,7 +48,6 @@ class Spreadsheet(object):
 
     def read_column(self, col, header=True, start_row=1):
         """ Read values from a column
-            Params:
             @col - The column to read
             @header - True if the column has a header """
 
@@ -81,7 +78,6 @@ class Spreadsheet(object):
 
     def read_row(self, row, start_col=1):
         """ Read values from a row
-            Params:
             @row - The row to read
             @start_col - The column to read past"""
 
@@ -106,7 +102,6 @@ class Spreadsheet(object):
 
     def write_column(self, col, content, start_row=1, bold=False, italics=False):
         """ Write values to a column
-            Params:
             @col - The column to read
             @start_row - The row to start writing at
             @content - a list of values to write """
@@ -125,7 +120,6 @@ class Spreadsheet(object):
 
     def write_row(self, row, content, start_col=1, bold=False, italics=False):
         """ Write values to a row
-            Params:
             @row - The row to write to
             @start_col - The column to start writing at
             @content - a list of values to write """
@@ -143,6 +137,7 @@ class Spreadsheet(object):
 
     def create_sheets(self, values):
         """ Create sheets """
+
         for value in values:
             self.file.create_sheet(value)
 

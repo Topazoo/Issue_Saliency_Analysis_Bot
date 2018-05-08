@@ -12,9 +12,9 @@ from POL193_RedditBot.Bot import Bot
 
 class Driver(object):
     def __init__(self):
-        self.post_count = 20
-        self.user_count = 10
-        self.comment_count = 30
+        self.post_count = 5
+        self.user_count = 5
+        self.comment_count = 10
         self.create_output = True
         self.analyze = True
 
@@ -33,10 +33,8 @@ class Driver(object):
         """ Prompt the user for default or custom options """
 
         inpt = -1
-
         while inpt != "" and inpt != "\n" and inpt != "c":
             inpt = str(raw_input("Press enter to run with default options, or \'c\' to run with custom options\n>>> "))
-
         if inpt == "c":
             return True
 
@@ -46,7 +44,6 @@ class Driver(object):
         """ Prompt the user until a positive integer is given """
 
         inpt = ""
-
         while not inpt.isdigit() or int(inpt) < 0:
             inpt = str(raw_input("Enter a number of " + prompt + " to collect >>> "))
 
@@ -56,10 +53,8 @@ class Driver(object):
         """ Prompt the user until a yes or no is read """
 
         inpt = ""
-
         while inpt != "y" and inpt != "n":
             inpt = str(raw_input(prompt + " [y/n] >>> "))
-
         if inpt == "n":
             return False
 
@@ -68,19 +63,23 @@ class Driver(object):
 def main():
     """ Main driver for the Reddit bot """
 
+    # Instantiate objects
     driver = Driver()
     bot = Bot('193bot')
 
+    # Collect information
     bot.get_subreddits()
     bot.get_posts(driver.post_count)
     bot.get_users(driver.user_count, driver.comment_count)
 
+    # Analyze information
+    if driver.analyze:
+        bot.analyze()
+
+    # Write output
     if driver.create_output:
         bot.create_subreddit_output()
         bot.create_user_output()
-
-    if driver.analyze:
-        bot.analyze()
 
 if __name__ == '__main__':
     main()
