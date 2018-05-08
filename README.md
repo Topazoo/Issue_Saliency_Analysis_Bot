@@ -29,14 +29,14 @@ for writing lists of data to spreadsheet rows or columns on its own.
  data.
  
  ```
- $ ./driver.py
- Press enter to run with default options, or 'c' to run with custom options
+$ ./driver.py
+Press enter to run with default options, or 'c' to run with custom options
 >>> c
-Create output [y/n] >>> n
-Analyze data [y/n] >>> n
-Enter a number of posts to analyze >>> 2
-Enter a number of users to analyze >>> 2
-Enter a number of comments to analyze >>> 2
+Enter a number of posts to collect >>> 3
+Enter a number of users to collect >>> 5
+Enter a number of comments to collect >>> 10
+Create output [y/n] >>> y
+Analyze data [y/n] >>> y
 Running with custom options. Please wait...
  ```
 
