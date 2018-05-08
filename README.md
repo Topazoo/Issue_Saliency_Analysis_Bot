@@ -1,5 +1,10 @@
 # Subreddit Analysis Tool
 ### Author: Peter Swanson
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Python 2.7](https://img.shields.io/badge/Python-2.7-brightgreen.svg)](https://www.python.org/downloads/release/python-2714/)
+[![openpyxl](https://img.shields.io/badge/openpyxl-2.5.3-brightgreen.svg)](https://pypi.org/project/openpyxl/)
+[![praw](https://img.shields.io/badge/praw-5.4.0-brightgreen.svg)](https://pypi.org/project/praw/)
+
 
 ## Background
 Every subreddit on Reddit can be viewed as its own  online community. Each has its own rules, moderators and regular posters.
@@ -18,6 +23,23 @@ for writing lists of data to spreadsheet rows or columns on its own.
 
 
 ## Functionality
+### Quick Use:
+- If your input file is all set, running <b>driver.py</b> will walk you through a series of prompts. You can choose how 
+ many posts, users, and comments to collect, whether to write them to a spreadsheet, and whether to analyze collected
+ data.
+ 
+ ```
+ $ ./driver.py
+ Press enter to run with default options, or 'c' to run with custom options
+>>> c
+Create output [y/n] >>> n
+Analyze data [y/n] >>> n
+Enter a number of posts to analyze >>> 2
+Enter a number of users to analyze >>> 2
+Enter a number of comments to analyze >>> 2
+Running with custom options. Please wait...
+ ```
+
 ### Set Up:
 - Create a <b>subreddits.xlsx</b> spreadsheet containing two columns the headers:
     1. Subreddit - The name of the subreddit (e.g. r/all)

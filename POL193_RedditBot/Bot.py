@@ -6,12 +6,13 @@
     Description: A class to contain, organize, and analyze Reddit data
 
     Version: Python 2.7
-    Requirements: Spreadsheet.py, Reddit.py and openpyxl """
+    Requirements: Spreadsheet.py, Reddit.py, Analyzer.py, praw and openpyxl """
 
 import praw
 from collections import Counter
 from Reddit import Subreddit, Post, User
 from Spreadsheet import Spreadsheet
+from Analyzer import Analyzer
 
 class Bot(object):
     """ Class to contain highest-order program operations
@@ -27,6 +28,9 @@ class Bot(object):
 
         # Create a list of subreddits
         self.subreddits = []
+
+        # Class to analyze collected information
+        self.analyzer = Analyzer(self.subreddits)
 
     def get_subreddits(self):
         """ Get info from the spreadsheet """
@@ -179,3 +183,7 @@ class Bot(object):
                 # Store most recent comments
                 new_user.get_comments(subreddit, comment_count)
                 subreddit.top_posters.append(new_user)
+
+
+    def analyze(self):
+        self.analyzer.analyze_all_text()
