@@ -36,6 +36,7 @@ Press enter to run with default options, or 'c' to run with custom options
 Enter a number of posts to collect >>> 3
 Enter a number of users to collect >>> 5
 Enter a number of comments to collect >>> 10
+Enter a number of nouns to collect >>> 5
 Create output [y/n] >>> y
 Analyze data [y/n] >>> y
 Running with custom options. Please wait...
@@ -57,7 +58,7 @@ the name you gave your bot when setting up PRAW
     # bot_name - A string containing the bot's name
     >>> bot = Bot(bot_name='193bot') 
 ```
-- Use the <b>Bot.get_subreddits()</b> and <b>Bot.get_posts()</b> methods to collect subreddit and post information respectively 
+- Use the <b>Bot.get_subreddits()</b> and <b>Bot.get_posts()</b> methods to collect subreddit and post information respectively. 
 ``` 
     >>> bot.get_subreddits()
     
@@ -78,18 +79,34 @@ the name you gave your bot when setting up PRAW
      Date: 2017-10-09 17:42:47
      Link: /r/socialism/comments/75ar86/yup/
 ```
+- Use the <b>Bot.get_users()</b> method to collect top posters and most recent comments for each subreddit.
+```
+    >>> bot.get_users(user_count=10, comment_count=10)
+```
+- This data is stored in the <b>Bot.subreddits.top_posters</b> and <b>Bot.subreddits.top_posters[i].sub_comments</b> 
+as User and Comment objects respectively.
+
+### Analyzing Information:
+- Collected comments can be analyzed for their polarity (positive vs. negative), subjectivity (vs. objectivity), and most frequent nouns.
+  Subreddits can also be analyzed for most frequent words.
+```
+    >>> bot.analyze(nouns_count=5)
+```
 
 ### Recording Information:
-- Information can be written to an Excel spreadsheets in <b>output/subreddit_results.xlsx</b> and <b>output/user_results.xlsx</b> using the respective methods
+- Information can be written to Excel spreadsheets in <b>output/subreddit_results.xlsx, output/user_results.xlsx, and 
+output/comment_results.xlsx</b> using the respective methods
 ```
     >>> bot.create_subreddit_output()
     Success! Data written to output/subreddit_results.xlsx
     >>> bot.create_user_output()
     Success! Data written to output/user_results.xlsx
+    >>> bot.create_comment_output()
+    Success! Data written to: output/comment_results.xlsx
 ```
 - The first spreadsheet contains information about the top posts and posters in each subreddit.
 - The second spreadsheet contains information about the top posters in each subreddit and their most recent comments.
-
+- The third spreadsheet contains information about the most frequently used nouns by subreddit and user.
 
 
 ## Files
@@ -178,7 +195,8 @@ the name you gave your bot when setting up PRAW
    # Instantiate am Analyzer object with a list of Subreddits populated with user and post information
     >>> analyzer = Analyzer(subreddits=[Reddit.Subreddit])
     
-   # Analyze polarity and subjectivity for all subreddits and user comments. 
+   # Analyze polarity, subjectivity, and most used nouns for all 
+   # subreddits and user comments. 
     >>> analyzer.analyze_all_text()
     >>> print(analyzer.subreddits[0].average_polarity
     .077501112
@@ -195,7 +213,3 @@ the name you gave your bot when setting up PRAW
     - Reddit OAuth2 - https://github.com/reddit-archive/reddit/wiki/OAuth2
     - A praw.ini file with your OAuth2 details - http://praw.readthedocs.io/en/latest/getting_started/configuration/prawini.html
 - textblob - http://textblob.readthedocs.io/en/dev/
-## TODO:
-- Most used words: https://pypi.org/project/redditanalysis/1.0.5/
-- Word clouds: https://github.com/paul-nechifor/reddit-cloud
-- Extract text from images: https://github.com/PiJoules/Text-from-Memes

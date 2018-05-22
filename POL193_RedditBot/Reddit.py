@@ -19,6 +19,7 @@ class Subreddit(object):
         self.users = 0
         self.top_posts = []
         self.top_posters = []
+        self.most_frequent = []
         self.average_subjectivity = 0
         self.overall_subjectivity = None
         self.average_polarity = 0
@@ -99,6 +100,7 @@ class User(object):
         self.overall_polarity = None
 
         self.sub_comments = []
+        self.most_frequent = []
 
     def get_comments(self, subreddit, num_comments=10):
         """ Collects recent posts by a user in a given subreddit
@@ -125,7 +127,6 @@ class User(object):
             return str(self.name)
         return '<Empty_User_Object>'
 
-
 class Comment(object):
     """ Class to hold comment information """
 
@@ -135,6 +136,7 @@ class Comment(object):
         self.post = comment.submission
         self.polarity = None
         self.subjectivity = None
+        self.most_frequent = []
 
     def __str__(self):
         if self.author and self.text:

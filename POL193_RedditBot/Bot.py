@@ -23,6 +23,7 @@ class Bot(object):
         self.input_sheet = Spreadsheet("input/subreddits.xlsx")
         self.subreddit_output_sheet = Spreadsheet("output/subreddit_results.xlsx", False)
         self.user_output_sheet = Spreadsheet("output/user_results.xlsx", False)
+        self.comment_output_sheet = Spreadsheet("output/comment_results.xlsx", False)
 
         self.reddit = praw.Reddit(bot_name)
 
@@ -74,6 +75,19 @@ class Bot(object):
         self.write_posts()
 
         print("Success! Data written to: output/subreddit_results.xlsx")
+
+    def create_comment_output(self):
+        """ Create the comment output file """
+
+        # Create sheets
+        init_sheet = self.comment_output_sheet.file['Sheet']
+        init_sheet.title = 'Subreddits'
+        self.comment_output_sheet.create_sheets([repr(x)[2:] for x in self.subreddits])
+
+        self.write_comments()
+
+        print("Success! Data written to: output/coment_results.xlsx")
+
 
     def create_user_output(self):
         """ Create the output sheet for user information """
@@ -154,7 +168,7 @@ class Bot(object):
 
         # Get and label sheet
         self.user_output_sheet.sheet = self.user_output_sheet.file.worksheets[0]
-        self.user_output_sheet.write_row(1,["User", "Karma", "Subreddit", "Comments", "Average Polarity", "Average Subjectivity"], bold=True)
+        self.user_output_sheet.write_row(1,["User", "Karma", "Subreddit", "Comments", "Average Polarity", "Average Subjectivity", "Frequent Nouns"], bold=True)
 
         row = 2
         for subreddit in self.subreddits:
@@ -170,8 +184,42 @@ class Bot(object):
             self.user_output_sheet.write_column(5, [str(poster.average_polarity) for poster in subreddit.top_posters], start_row=row)
             # Write average subjectivity
             self.user_output_sheet.write_column(6, [str(poster.average_subjectivity) for poster in subreddit.top_posters], start_row=row)
+            # Write most used nouns
+            self.user_output_sheet.write_column(7, [str(poster.most_frequent) for poster in subreddit.top_posters], start_row=row)
 
             row += len(subreddit.top_posters)
+
+    def write_comments(self):
+        """ Write info collected about comments """
+
+        # Get sheet
+        self.comment_output_sheet.sheet = self.comment_output_sheet.file.worksheets[0]
+
+        # Write legend
+        self.comment_output_sheet.write_row(2, ["Noun", "Frequency"] * len(self.subreddits), italics=True)
+
+        # Write data
+        col = 1
+        for subreddit in self.subreddits:
+            self.comment_output_sheet.write_column(col, [subreddit.name], bold=True)
+            self.comment_output_sheet.write_column(col, [str(tup[0]) for tup in subreddit.most_frequent], start_row=3)
+            self.comment_output_sheet.write_column(col+1, [str(tup[1]) for tup in subreddit.most_frequent], start_row=3)
+            col += 2
+
+        sub_num = 0
+        for sheet in self.comment_output_sheet.file.worksheets:
+            if str(sheet.title) != "Subreddits":
+                user_col = 1
+                self.comment_output_sheet.sheet = sheet
+                self.comment_output_sheet.write_row(2, ["Noun", "Frequency"] * len(self.subreddits[sub_num].top_posters),
+                                                    italics=True)
+                for user in self.subreddits[sub_num].top_posters:
+                    self.comment_output_sheet.write_column(user_col, [user.name], start_row=1, bold=True)
+                    self.comment_output_sheet.write_column(user_col, [str(tup[0]) for tup in user.most_frequent], start_row=3)
+                    self.comment_output_sheet.write_column(user_col+1, [str(tup[1]) for tup in user.most_frequent], start_row=3)
+                    user_col += 2
+
+                sub_num += 1
 
     def get_users(self, user_count=10, comment_count=10):
         """ Get the top users for each subreddit
@@ -199,5 +247,8 @@ class Bot(object):
                 new_user.get_comments(subreddit, comment_count)
                 subreddit.top_posters.append(new_user)
 
-    def analyze(self):
-        self.analyzer.analyze_all_text()
+    def analyze(self, nouns_count=5):
+        """ Analyze all text
+            @nouns_count - The number of nouns to collect """
+
+        self.analyzer.analyze_all_text(nouns_count)

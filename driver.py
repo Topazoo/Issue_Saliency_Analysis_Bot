@@ -14,7 +14,8 @@ class Driver(object):
     def __init__(self):
         self.post_count = 5
         self.user_count = 5
-        self.comment_count = 10
+        self.comment_count = 5
+        self.noun_count = 5
         self.create_output = True
         self.analyze = True
 
@@ -22,6 +23,7 @@ class Driver(object):
             self.post_count = self.get_pos_int("posts")
             self.user_count = self.get_pos_int("users")
             self.comment_count = self.get_pos_int("comments")
+            self.noun_count = self.get_pos_int("nouns")
             self.create_output = self.get_y_n("Create output")
             self.analyze = self.get_y_n("Analyze data")
 
@@ -80,6 +82,7 @@ def main():
     if driver.create_output:
         bot.create_subreddit_output()
         bot.create_user_output()
+        bot.create_comment_output()
 
 if __name__ == '__main__':
     main()
